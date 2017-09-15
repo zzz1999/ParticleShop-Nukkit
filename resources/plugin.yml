@@ -1,0 +1,9 @@
+name: ParticleShop
+author: zzz
+main: cn.zzz1999.ParticleShop.ParticleShop
+api: ["1.0.0"]
+version: "1.0.0 build 1"
+
+permissions:
+ ParticleShop.command.ps:
+  default: true
