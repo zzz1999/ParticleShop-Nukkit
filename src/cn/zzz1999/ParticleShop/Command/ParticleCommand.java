@@ -16,8 +16,6 @@ public class ParticleCommand extends Command {
     public ParticleCommand() {
         super("ps", "ParticleShop Command", "ps help", new String[]{"particleshop"});
         this.setPermission("ParticleShop.command.ps");
-        this.commandParameters.clear();
-
     }
     private boolean isNumeric(String str){
         Pattern pattern = Pattern.compile("[0-9]+");
@@ -28,6 +26,7 @@ public class ParticleCommand extends Command {
     @Override
     @SuppressWarnings("unchecked")
     public boolean execute(CommandSender sender, String label, String[] args) {
+        if(args.length>0)
         switch(args[0]){
             case "help":
                 sendUsage(sender);
