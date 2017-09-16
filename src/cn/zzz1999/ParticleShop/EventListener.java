@@ -9,6 +9,8 @@ import cn.nukkit.event.Listener;
 import cn.nukkit.event.block.BlockBreakEvent;
 import cn.nukkit.event.block.SignChangeEvent;
 import cn.nukkit.event.player.PlayerInteractEvent;
+import cn.nukkit.event.player.PlayerJoinEvent;
+import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.item.Item;
 import cn.nukkit.level.particle.Particle;
 import cn.nukkit.utils.Config;
@@ -46,24 +48,24 @@ public class EventListener implements Listener {
                     Boolean b;
                     String line = event.getLine(1);
 
-                            if(isNumeric(line)){
-                                type = Integer.parseInt(line);
-                                if (type >= 0 && type < ParticleInfo.values().length) {
-                                    b = true;
-                                } else {
-                                    p.sendPopup(TextFormat.RED+"[ParticleShop] 不存在序号为" + type + "的粒子");
-                                    b = false;
-                                }
+                    if(isNumeric(line)){
+                        type = Integer.parseInt(line);
+                        if (type >= 0 && type < ParticleInfo.values().length) {
+                            b = true;
+                        } else {
+                            p.sendPopup(TextFormat.RED+"[ParticleShop] 不存在序号为" + type + "的粒子");
+                            b = false;
+                        }
 
-                            }else {
-                                try {
-                                    type = ParticleInfo.valueOf(line).ordinal();
-                                    b = true;
-                                } catch (IllegalArgumentException ex) {
-                                    p.sendPopup(TextFormat.RED+"[ParticleShop] 不存在名字为" + line + "的粒子");
-                                    b = false;
-                                }
-                            }
+                    }else {
+                        try {
+                            type = ParticleInfo.valueOf(line).ordinal();
+                            b = true;
+                        } catch (IllegalArgumentException ex) {
+                            p.sendPopup(TextFormat.RED+"[ParticleShop] 不存在名字为" + line + "的粒子");
+                            b = false;
+                        }
+                    }
 
                     Double price = null;
                     Boolean a;
@@ -86,13 +88,11 @@ public class EventListener implements Listener {
                         event.setLine(2, TextFormat.YELLOW+"价格:"+price);
                         event.setLine(3, TextFormat.AQUA+"双击购买粒子");
                     }
-
-
                 }
             }
         }
     }
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onBreak(BlockBreakEvent event){
         Block b = event.getBlock();
         String key = b.getX()+","+b.getY()+","+b.getZ()+","+b.getLevel().getFolderName();
@@ -108,7 +108,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     @SuppressWarnings("unchecked")
     public void onClick(PlayerInteractEvent event){
         if(new ArrayList<Integer>(){
@@ -154,12 +154,26 @@ public class EventListener implements Listener {
                             EconomyAPI.getInstance().reduceMoney(player,shop.getPrice());
                             player.sendMessage(TextFormat.GOLD+"[ParticleShop] 购买成功");
                         }
-
                     }
-
                 }
             }
+        }
+    }
 
+    @EventHandler(priority = EventPriority.LOWEST , ignoreCancelled = false)
+    public void putFollowList(PlayerJoinEvent event){
+        if(!ParticleShop.getInstance().getFollowList().containsKey(event.getPlayer().getName())){
+            Player p = event.getPlayer();
+            Config c = ParticleShop.getInstance().getPlayerConfig(p);
+            if(c.get("Presence") !=null) {
+                ParticleShop.getInstance().getFollowList().put(p.getName(), c.getInt("Presence"));
+            }
+        }
+    }
+    @EventHandler(priority = EventPriority.LOWEST , ignoreCancelled = false)
+    public void removeFollowList(PlayerQuitEvent event){
+        if(ParticleShop.getInstance().getFollowList().containsKey(event.getPlayer().getName())){
+            ParticleShop.getInstance().getFollowList().remove(event.getPlayer().getName());
         }
     }
 }

@@ -2,6 +2,7 @@ package cn.zzz1999.ParticleShop.Command;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.Config;
 import cn.nukkit.utils.TextFormat;
 import cn.zzz1999.ParticleShop.ParticleShop;
@@ -14,6 +15,8 @@ import java.util.regex.Pattern;
 public class ParticleCommand extends Command {
     public ParticleCommand() {
         super("ps", "ParticleShop Command", "ps help", new String[]{"particleshop"});
+        this.setPermission("ParticleShop.command.ps");
+        this.commandParameters.clear();
 
     }
     private boolean isNumeric(String str){

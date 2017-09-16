@@ -9,7 +9,7 @@ public class AutoSaveTask implements Runnable{
 
     @Override
     public void run() {
-        new Config(new File(ParticleShop.getInstance().getDataFolder(),"Shops.yml"),Config.YAML).save();
+        ParticleShop.getInstance().getProvider().save();
     }
 
 }
