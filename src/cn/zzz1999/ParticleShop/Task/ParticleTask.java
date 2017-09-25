@@ -3,17 +3,16 @@ package cn.zzz1999.ParticleShop.Task;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.block.BlockNetherPortal;
+
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.particle.*;
 import cn.nukkit.math.BlockFace;
-import cn.nukkit.math.Vector3;
+
 import cn.zzz1999.ParticleShop.ParticleShop;
 
-import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
+
 
 public class ParticleTask implements Runnable {
     private ParticleShop plugin;

@@ -2,7 +2,6 @@ package cn.zzz1999.ParticleShop;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-import cn.nukkit.event.Event;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
 import cn.nukkit.event.Listener;
@@ -12,11 +11,9 @@ import cn.nukkit.event.player.PlayerInteractEvent;
 import cn.nukkit.event.player.PlayerJoinEvent;
 import cn.nukkit.event.player.PlayerQuitEvent;
 import cn.nukkit.item.Item;
-import cn.nukkit.level.particle.Particle;
 import cn.nukkit.utils.Config;
-import cn.nukkit.utils.TextFormat;
+import cn.zzz1999.ParticleShop.Language.TextTranslation;
 import me.onebone.economyapi.EconomyAPI;
-
 
 import java.util.*;
 import java.util.regex.*;
@@ -53,7 +50,7 @@ public class EventListener implements Listener {
                         if (type >= 0 && type < ParticleInfo.values().length) {
                             b = true;
                         } else {
-                            p.sendPopup(TextFormat.RED+"[ParticleShop] 不存在序号为" + type + "的粒子");
+                            p.sendPopup(new TextTranslation("shop.type.error",String.valueOf(type)).toString());
                             b = false;
                         }
 
@@ -62,7 +59,7 @@ public class EventListener implements Listener {
                             type = ParticleInfo.valueOf(line).ordinal();
                             b = true;
                         } catch (IllegalArgumentException ex) {
-                            p.sendPopup(TextFormat.RED+"[ParticleShop] 不存在名字为" + line + "的粒子");
+                            p.sendPopup(new TextTranslation("shop.name.error",String.valueOf(line)).toString());
                             b = false;
                         }
                     }
@@ -73,7 +70,7 @@ public class EventListener implements Listener {
                         price = Double.parseDouble(event.getLine(2));
                         a =true;
                     }else{
-                        p.sendPopup(TextFormat.RED+"[ParticleShop] 第三行输入错误");
+                        p.sendPopup(new TextTranslation("shop.price.error").toString());
                         a = false;
                     }
 
@@ -82,11 +79,12 @@ public class EventListener implements Listener {
                         Map<String,ShopInstance> map = ParticleShop.getInstance().getShops();
                         map.put(block.getX()+","+block.getY()+","+block.getZ()+","+block.getLevel().getFolderName(),new ShopInstance(block.getFloorX(),block.getFloorY(),block.getFloorZ(),block.getLevel(),type,price));
                         ParticleShop.getInstance().getProvider().addShop(block.getFloorX(),block.getFloorY(),block.getFloorZ(),block.getLevel(),type,price);
-                        p.sendPopup(TextFormat.GOLD+"[ParticleShop] 粒子商店创建成功");
-                        event.setLine(0, TextFormat.BOLD+""+TextFormat.LIGHT_PURPLE+"[ ParticleShop ]");
-                        event.setLine(1, TextFormat.WHITE+"名字:"+ParticleShop.getInstance().getParticleName(type));
-                        event.setLine(2, TextFormat.YELLOW+"价格:"+price);
-                        event.setLine(3, TextFormat.AQUA+"双击购买粒子");
+                        p.sendPopup(new TextTranslation("shop.create.succeed").toString());
+                        event.setLine(0, new TextTranslation("shop.format.one").toString());
+                        event.setLine(1, new TextTranslation("shop.format.two",ParticleShop.getInstance().getParticleName(type)).toString());
+                        event.setLine(2, new TextTranslation("shop.format.three",String.valueOf(price)).toString());
+                        event.setLine(3, new TextTranslation("shop.format.four").toString());
+
                     }
                 }
             }
@@ -99,11 +97,12 @@ public class EventListener implements Listener {
         if(ParticleShop.getInstance().getShops().containsKey(key)) {
             if (!event.getPlayer().isOp()) {
                 event.setCancelled();
-                event.getPlayer().sendMessage(TextFormat.RED+"[ParticleShop] 你没有权限破坏粒子商店");
+                event.getPlayer().sendMessage(new TextTranslation("permission.break.no").toString());
             } else {
                 ParticleShop.getInstance().getProvider().removeShop(event.getBlock());
                 ParticleShop.getInstance().getShops().remove(key);
-                event.getPlayer().sendMessage(TextFormat.GREEN+"[ParticleShop] 你以成功破坏粒子商店");
+                event.getPlayer().sendMessage(new TextTranslation("permission.break.true").toString());
+
             }
         }
     }
@@ -123,13 +122,13 @@ public class EventListener implements Listener {
             String key = block.getX()+","+block.getY()+","+block.getZ()+","+block.getLevel().getFolderName();
             if(ParticleShop.getInstance().getShops().containsKey(key)){
                 ShopInstance shop  = ParticleShop.getInstance().getShops().get(key);
-                if(!taps.containsKey(player.getName()) || taps.get(player.getName()) + 500L < new Date().getTime()){
+                if(!taps.containsKey(player.getName()) || taps.get(player.getName()) + 3000L < new Date().getTime()){
                     taps.put(player.getName(),new Date().getTime());
-                    player.sendMessage(TextFormat.YELLOW+"[ParticleShop] 你确定需要购买吗,请再次点击确认");
+                    player.sendMessage(new TextTranslation("particle.buy.double").toString());
                     return ;
                 }
                 if(EconomyAPI.getInstance().myMoney(event.getPlayer()) < shop.getPrice()){
-                    player.sendMessage(TextFormat.GRAY+"[ParticleShop] 你没有足够的钱去购买这个粒子,购买这个粒子需要"+EconomyAPI.getInstance().getMonetaryUnit()+shop.getPrice()+".你还差"+String.valueOf(shop.getPrice() - EconomyAPI.getInstance().myMoney(player)));
+                    player.sendMessage(new TextTranslation("particle.buy.nomoney",EconomyAPI.getInstance().getMonetaryUnit()+shop.getPrice(),String.valueOf(shop.getPrice() - EconomyAPI.getInstance().myMoney(player))).toString());
 
                 }else{
                     Config config = ParticleShop.getInstance().getPlayerConfig(player);
@@ -140,19 +139,18 @@ public class EventListener implements Listener {
                         config.set("Particles", particles);
                         config.set("Presence",null);
                         config.save();
-
-                        player.sendMessage(TextFormat.GOLD+"[ParticleShop] 你以成功购买这个粒子");
+                        player.sendMessage(new TextTranslation("particle.buy.succeed").toString());
                     }else{
                         ArrayList<Integer> particles = (ArrayList<Integer>) config.get("Particles");
                         if(particles.contains(shop.getParticleType())){
-                            player.sendMessage(TextFormat.GRAY+"[ParticleShop] 你已经拥有了这个粒子无法重复购买");
+                            player.sendMessage(new TextTranslation("particle.buy.exist").toString());
 
                         }else{
                             particles.add(shop.getParticleType());
                             config.set("Particles", particles);
                             config.save();
                             EconomyAPI.getInstance().reduceMoney(player,shop.getPrice());
-                            player.sendMessage(TextFormat.GOLD+"[ParticleShop] 购买成功");
+                            player.sendMessage(new TextTranslation("particle.buy.succeed").toString());
                         }
                     }
                 }
