@@ -2,6 +2,7 @@ package cn.zzz1999.ParticleShop.Command;
 
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
+import cn.nukkit.command.data.CommandParameter;
 import cn.nukkit.utils.Config;
 import cn.zzz1999.ParticleShop.Language.TextTranslation;
 import cn.zzz1999.ParticleShop.ParticleShop;
@@ -15,6 +16,20 @@ public class ParticleCommand extends Command {
     public ParticleCommand() {
         super("ps", "ParticleShop Command", "ps help", new String[]{"particleshop"});
         this.setPermission("ParticleShop.command.ps");
+        this.commandParameters.put("help",new CommandParameter[]{
+                new CommandParameter("help",new String[]{"help"}),
+        });
+        this.commandParameters.put("set",new CommandParameter[]{
+                new CommandParameter("set",new String[]{"set"}),
+                new CommandParameter("Presence",CommandParameter.ARG_TYPE_INT),
+        });
+        this.commandParameters.put("list",new CommandParameter[]{
+                new CommandParameter("list",new String[]{"help"}),
+        });
+        this.commandParameters.put("close",new CommandParameter[]{
+                new CommandParameter("close | stop",new String[]{"close","stop"}),
+        });
+
     }
     private boolean isNumeric(String str){
         Pattern pattern = Pattern.compile("[0-9]+");
@@ -85,7 +100,7 @@ public class ParticleCommand extends Command {
         return true;
     }
     private void sendUsage(CommandSender sender){
-        sender.sendMessage(new TextTranslation("command.help.title").toString());;
+        sender.sendMessage(new TextTranslation("command.help.title").toString());
         sender.sendMessage(new TextTranslation("command.help.set").toString());
         sender.sendMessage(new TextTranslation("command.help.stop").toString());
         sender.sendMessage(new TextTranslation("command.help.list").toString());
