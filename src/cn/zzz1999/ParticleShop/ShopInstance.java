@@ -2,21 +2,20 @@ package cn.zzz1999.ParticleShop;
 
 import cn.nukkit.level.Level;
 import cn.nukkit.level.Position;
-import cn.zzz1999.ParticleShop.Task.ParticleTask;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class ShopInstance {
 
-    private Integer x;
-    private Integer y;
-    private Integer z;
+    private int x;
+    private int y;
+    private int z;
     private Level level;
-    private Integer ParticleType;
-    private Double price;
+    private int ParticleType;
+    private double price;
 
-    public ShopInstance(Integer x,Integer y,Integer z,String level ,Integer particleType,Double price){
+    ShopInstance(int x, int y, int z, String level, int particleType, double price) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -24,7 +23,8 @@ public class ShopInstance {
         this.ParticleType = particleType;
         this.price = price;
     }
-    public ShopInstance(Integer x,Integer y,Integer z,Level level ,Integer particleType,Double price){
+
+    ShopInstance(int x, int y, int z, Level level, int particleType, double price) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -34,42 +34,48 @@ public class ShopInstance {
     }
 
 
-    public Integer getX() {
+    private int getX() {
         return x;
     }
-    public Integer getY(){
+
+    private int getY() {
         return y;
     }
-    public Integer getZ(){
+
+    private int getZ() {
         return z;
     }
-    public Level getLevel(){
+
+    private Level getLevel() {
         return level;
     }
-    public Integer getParticleType(){
+
+    int getParticleType() {
         return ParticleType;
     }
-    public Double getPrice(){
+
+    double getPrice() {
         return price;
     }
-    public Position getPosition(){
-        return new Position(x,y,z,level);
+
+    public Position getPosition() {
+        return new Position(x, y, z, level);
     }
 
-    public Map<String,Object> toMap(){
-        return new LinkedHashMap<String,Object>(){{
-            put("X",getX());
-            put("Y",getY());
-            put("Z",getZ());
-            put("Level",getLevel());
-            put("ParticleType",getParticleType());
-            put("Price",getPrice());
+    public Map<String, Object> toMap() {
+        return new LinkedHashMap<String, Object>() {{
+            put("X", getX());
+            put("Y", getY());
+            put("Z", getZ());
+            put("Level", getLevel());
+            put("ParticleType", getParticleType());
+            put("Price", getPrice());
         }};
     }
-    public String toString(){
+
+    public String toString() {
         return getX() + "," + getY() + "," + getZ() + "," + getLevel().getFolderName();
     }
-
 
 
 }

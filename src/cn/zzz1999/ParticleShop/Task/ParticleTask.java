@@ -3,35 +3,38 @@ package cn.zzz1999.ParticleShop.Task;
 
 import cn.nukkit.Player;
 import cn.nukkit.block.Block;
-
 import cn.nukkit.item.Item;
 import cn.nukkit.level.Location;
 import cn.nukkit.level.particle.*;
 import cn.nukkit.math.BlockFace;
-
 import cn.zzz1999.ParticleShop.ParticleShop;
 
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 
 public class ParticleTask implements Runnable {
-    private ParticleShop plugin;
 
-    public ParticleTask (ParticleShop plugin){
-        this.plugin = plugin ;
+    public ParticleTask() {}
+
+    private static double nextDouble(final double min, final double max) {
+        if (min == max) {
+            return min;
+        }
+        return min + ((max - min) * ThreadLocalRandom.current().nextDouble());
     }
+
     @Override
     public void run() {
         while (true) {
             synchronized (this) {
-                ParticleShop.getInstance().getFollowList().forEach((String key, Integer value) ->{
+                ParticleShop.getInstance().getFollowList().forEach((String key, Integer value) -> {
                     Player p = ParticleShop.getInstance().getServer().getPlayer(key);
-                    if(p != null){
-                        p.getLevel().addParticle(getParticle(value,p.add(nextDouble(-1-1,1+1),0.2,nextDouble(-1-1,1+1))));
+                    if (p != null) {
+                        p.getLevel().addParticle(getParticle(value, p.add(nextDouble(-1 - 1, 1 + 1), 0.2, nextDouble(-1 - 1, 1 + 1))));
                     }
                 });
                 try {
-                    Thread.sleep(500);
+                    Thread.sleep(500L);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -39,14 +42,9 @@ public class ParticleTask implements Runnable {
         }
 
     }
-    public static double nextDouble(final double min, final double max){
-        if (min == max) {
-            return min;
-        }
-        return min + ((max - min) * new Random().nextDouble());
-    }
-    public Particle getParticle(Integer type, Location pos){
-        switch(type) {
+
+    private Particle getParticle(Integer type, Location pos) {
+        switch (type) {
             case 0:
                 return new AngryVillagerParticle(pos);
 
@@ -153,6 +151,6 @@ public class ParticleTask implements Runnable {
                 return new WaterParticle(pos);
 
         }
-        return new SmokeParticle(pos,6);
+        return new SmokeParticle(pos, 6);
     }
 }

@@ -11,26 +11,25 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class YamlProvider implements Provider{
-    //for shop.yml alter
-    private ParticleShop plugin;
+public class YamlProvider implements Provider {
     private Config shop;
-    public YamlProvider(ParticleShop plugin){
-        this.plugin = plugin;
-        this.shop = new Config(new File(this.plugin.getDataFolder(),"Shops.yml"),Config.YAML);
+
+    public YamlProvider(ParticleShop plugin) {
+        //for shop.yml alter
+        this.shop = new Config(new File(plugin.getDataFolder(), "Shops.yml"), Config.YAML);
     }
 
     @Override
-    public Boolean addShop(Integer x, Integer y, Integer z, Level level, int ParticleType, Double price) {
-        String key = x+","+y+","+z+","+level.getName();
-        if(!this.shop.exists(key)){
-            this.shop.set(key,new LinkedHashMap<String,Object>(){{
-                put("X",x);
-                put("Y",y);
-                put("Z",z);
-                put("Level",level.getFolderName());
-                put("ParticleType",ParticleType);
-                put("Price",price);
+    public Boolean addShop(int x, int y, int z, Level level, int ParticleType, double price) {
+        String key = x + "," + y + "," + z + "," + level.getName();
+        if (!this.shop.exists(key)) {
+            this.shop.set(key, new LinkedHashMap<String, Object>() {{
+                put("X", x);
+                put("Y", y);
+                put("Z", z);
+                put("Level", level.getFolderName());
+                put("ParticleType", ParticleType);
+                put("Price", price);
             }});
             return true;
         }
@@ -38,16 +37,16 @@ public class YamlProvider implements Provider{
     }
 
     @Override
-    public Boolean addShop(Integer x, Integer y, Integer z, String levelname, int ParticleType, Double price) {
-        String key = x+","+y+","+z+","+levelname;
-        if(!this.shop.exists(key)){
-            this.shop.set(key,new LinkedHashMap<String,Object>(){{
-                put("X",x);
-                put("Y",y);
-                put("Z",z);
-                put("Level",levelname);
-                put("ParticleType",ParticleType);
-                put("Price",price);
+    public Boolean addShop(int x, int y, int z, String levelname, int ParticleType, double price) {
+        String key = x + "," + y + "," + z + "," + levelname;
+        if (!this.shop.exists(key)) {
+            this.shop.set(key, new LinkedHashMap<String, Object>() {{
+                put("X", x);
+                put("Y", y);
+                put("Z", z);
+                put("Level", levelname);
+                put("ParticleType", ParticleType);
+                put("Price", price);
             }});
             return true;
         }
@@ -55,9 +54,9 @@ public class YamlProvider implements Provider{
     }
 
     @Override
-    public Boolean addShop(Position pos, int ParticleType, Double price) {
-        String key = pos.getX()+","+pos.getY()+","+pos.getZ()+","+pos.getLevel().getFolderName();
-        if(!this.shop.exists(key)) {
+    public Boolean addShop(Position pos, int ParticleType, double price) {
+        String key = pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + pos.getLevel().getFolderName();
+        if (!this.shop.exists(key)) {
             this.shop.set(key, new LinkedHashMap<String, Object>() {{
                 put("X", pos.getX());
                 put("Y", pos.getY());
@@ -72,9 +71,9 @@ public class YamlProvider implements Provider{
     }
 
     @Override
-    public Boolean removeShop(Integer x, Integer y, Integer z, Level level) {
-        String key = x+","+y+","+z+","+level.getFolderName();
-        if(this.shop.exists(key)){
+    public Boolean removeShop(int x, int y, int z, Level level) {
+        String key = x + "," + y + "," + z + "," + level.getFolderName();
+        if (this.shop.exists(key)) {
             this.shop.remove(key);
             return true;
         }
@@ -83,8 +82,8 @@ public class YamlProvider implements Provider{
 
     @Override
     public Boolean removeShop(Position pos) {
-        String key = pos.getX()+","+pos.getY()+","+pos.getZ()+","+pos.getLevel().getFolderName();
-        if(this.shop.exists(key)){
+        String key = pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + pos.getLevel().getFolderName();
+        if (this.shop.exists(key)) {
             this.shop.remove(key);
             return true;
         }
@@ -92,9 +91,9 @@ public class YamlProvider implements Provider{
     }
 
     @Override
-    public ShopInstance getShop(Integer x, Integer y, Integer z, Level level) {
-        String key = x+","+y+","+z+","+level.getFolderName();
-        Map<String , ShopInstance> map = ParticleShop.getInstance().getShops();
+    public ShopInstance getShop(int x, int y, int z, Level level) {
+        String key = x + "," + y + "," + z + "," + level.getFolderName();
+        Map<String, ShopInstance> map = ParticleShop.getInstance().getShops();
         if (map.containsKey(key)) {
             return map.get(key);
         }
@@ -103,8 +102,8 @@ public class YamlProvider implements Provider{
 
     @Override
     public ShopInstance getShop(Position pos) {
-        String key = pos.getX()+","+pos.getY()+","+pos.getZ()+","+pos.getLevel().getFolderName();
-        Map<String , ShopInstance> map = ParticleShop.getInstance().getShops();
+        String key = pos.getX() + "," + pos.getY() + "," + pos.getZ() + "," + pos.getLevel().getFolderName();
+        Map<String, ShopInstance> map = ParticleShop.getInstance().getShops();
         if (map.containsKey(key)) {
             return map.get(key);
         }

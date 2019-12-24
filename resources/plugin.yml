@@ -3,6 +3,7 @@ author: zzz
 main: cn.zzz1999.ParticleShop.ParticleShop
 api: ["1.0.0"]
 version: "1.0.1"
+website: "https://www.mcbbs.net/thread-728690-1-1.html"
 
 permissions:
  ParticleShop.command.ps:
